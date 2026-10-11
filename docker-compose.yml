@@ -10,5 +10,35 @@ services:
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ledger"]
       interval: 5s
+
+  migrate:
+    build: .
+    image: ledger:dev
+    command: ["node", "node_modules/node-pg-migrate/bin/node-pg-migrate.js", "up"]
+    environment:
+      DATABASE_URL: postgres://ledger:ledger@db:5432/ledger
+    depends_on:
+      db:
+        condition: service_healthy
+
+  api:
+    build: .
+    image: ledger:dev
+    command: ["node", "dist/api/server.js"]
+    environment:
+      DATABASE_URL: postgres://ledger:ledger@db:5432/ledger
+      PORT: 3000
+    ports: ["127.0.0.1:3000:3000"]
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/health/live').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
 volumes:
   pgdata:

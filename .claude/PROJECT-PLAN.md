@@ -111,6 +111,29 @@ Tasks sit in public subnets only to pull images/reach AWS APIs without NAT; SGs 
 - Budget alert $17/month; check Billing → Credits weekly (alerts lag hours).
 
 ## 7. Phase plan (goal · key steps · done when)
+
+| # | Phase | Done when | Target week |
+|---|---|---|---|
+| 0 | Guardrails | — | done |
+| 1a | Scaffold | config + pool + Fastify with two health routes | done |
+| 1b | Schema | ledger-core migration; up/down/up; psql break tests fail; SUM = 0 | Oct 12 |
+| 1c | Transfer + idempotency | same key twice → one transaction; same key, different body → 422; overdraft rejected | Oct 12 |
+| 1d | Outbox | rollback → no event; crash after commit → event survives | Oct 19 |
+| 1e | Shutdown + logs | in-flight request completes during shutdown | Oct 19 |
+| 2 | Worker | two workers never double-process; kill mid-batch → nothing lost | Oct 26 |
+| 3 | Tests | a deliberate bug is caught | Nov 2 |
+| 4 | Docker | `docker compose up` from a clean clone | Nov 9 |
+| 5 | Raw EC2 | 3 pains that orchestration fixes, written down | Nov 16 |
+| 6 | CI | failing test blocks PR | Nov 23 |
+| 7 | ECS by hand | HTTPS works, then everything deleted | Nov 30 |
+| 8 | Terraform | zero → HTTPS in one apply; destroy < 15 min | Dec 7 |
+| 9 | CD | broken image auto-rolls back | Dec 14 |
+| 10 | Service-to-service | worker reaches api by name; nothing else can | Dec 28 |
+| 11 | Observability | a forced error emails you | Jan 4 |
+| 12 | Write-up | post from journal: errors, decisions, numbers | Jan 11 |
+
+Target weeks are the week-of dates from §10; Dec 21 is buffer. Live status per phase lives in
+`.claude/PROJECT-CONTINUITY.md`, not here. Detail for each phase follows.
 - **0 Guardrails** — done.
 - **1a Scaffold** — done.
 - **1b Schema** — ledger-core migration; up/down/up; psql break tests (unbalanced, overdraft, edit) fail; SUM = 0.
@@ -186,3 +209,4 @@ Tasks sit in public subnets only to pull images/reach AWS APIs without NAT; SGs 
 - 2026-10-09: created from claude.ai sessions (Phase 0 → 1b).
 - 2026-10-10: renamed from BRIEF.md to .claude/PROJECT-PLAN.md. STATE.md retired; live progress moved to
   .claude/PROJECT-CONTINUITY.md. Absorbed STATE's account, schedule and open-decision content as sections 10 and 11.
+- 2026-10-11: added the 12-phase summary table to §7 (goal, done-when, target week).
