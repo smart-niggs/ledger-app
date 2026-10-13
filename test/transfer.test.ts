@@ -35,7 +35,8 @@ async function fund(accountId: string, amount: bigint, currency = "NGN"): Promis
     toId: accountId,
     amount,
   });
-  assert.equal(result.kind, "created");
+  // simulate test error to block CI
+  assert.equal(result.kind, "not created");
 }
 
 async function balanceOf(accountId: string): Promise<string> {
