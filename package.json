@@ -23,6 +23,7 @@
     "dev": "tsx watch --env-file=.env src/api/server.ts",
     "dev:worker": "tsx watch --env-file=.env src/worker/index.ts",
     "migrate": "node --env-file-if-exists=.env node_modules/node-pg-migrate/bin/node-pg-migrate.js",
+    "test": "node --env-file-if-exists=.env --test test/*.test.ts",
     "typecheck": "tsc --noEmit",
     "build": "rm -rf dist && tsc",
     "start": "node dist/api/server.js",
