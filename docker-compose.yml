@@ -1,12 +1,14 @@
 services:
   db:
-    image: postgres:17-alpine
+    image: postgres:18-alpine
     environment:
       POSTGRES_USER: ledger
       POSTGRES_PASSWORD: ledger
       POSTGRES_DB: ledger
     ports: ["127.0.0.1:5432:5432"]
-    volumes: [pgdata:/var/lib/postgresql/data]
+    # postgres:18+ images expect the mount one level up and place data in a
+    # major-version subdirectory, so pg_upgrade --link can cross versions.
+    volumes: [pgdata18:/var/lib/postgresql]
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ledger"]
       interval: 5s
@@ -41,4 +43,4 @@ services:
         condition: service_completed_successfully
 
 volumes:
-  pgdata:
+  pgdata18:
