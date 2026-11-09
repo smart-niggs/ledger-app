@@ -182,8 +182,14 @@ Three links, zero IP addresses, correct through every deploy.
   Dockerfile, Amazon's bundle from `truststore.pki.rds.amazonaws.com/us-east-1/`, and
   `?sslmode=verify-full&sslrootcert=/app/certs/rds-ca.pem`. Needs a rebuild, a new SHA tag
   and a new task definition revision.
-- **Teardown not yet run.** §7's bar is *"HTTPS works, **then everything deleted**"* — half
-  met. At time of writing the service is at desired `0`; ALB and RDS still bill ≈ $0.9/day.
+- **Teardown is run — §7's bar is met.** *"HTTPS works, **then everything deleted**"*: the
+  thirteen objects are deleted. Kept deliberately, per the phase plan: the ECR repo and the
+  `986530a` image, the ACM certificate for `trinaaxel.com` + `*.trinaaxel.com`, the
+  `trinaaxel.com` hosted zone, and the `ledger-ec2-ssm` role. The bullet here previously read
+  *"teardown not yet run … ALB and RDS still bill ≈ $0.9/day"* — true at close on 10-15,
+  corrected 11-03. **What is still open is the evidence, not the act:** no `describe-*` sweep
+  was ever pasted into this record, so "nothing billable remains" rests on the console, not on
+  output captured here. Next phase starts with that sweep.
 - **Task is 256 CPU / 2048 MB.** Meant to be 512 MB. Valid but roughly 2× the memory cost.
   Fix on the next revision.
 - **No task role**, so **no ECS Exec** — there is currently no way to get a shell inside a
